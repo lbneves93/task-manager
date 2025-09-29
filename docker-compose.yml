@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "3001:3000"
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+    environment:
+      - RAILS_ENV=development
+      - DATABASE_URL=postgres://postgres:password@db:5432/task_manager_development
+    command: bundle exec rails server -b 0.0.0.0
+
+  db:
+    image: postgres:15
+    environment:
+      - POSTGRES_DB=task_manager_development
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+
+volumes:
+  postgres_data:
